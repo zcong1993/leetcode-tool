@@ -17,7 +17,7 @@ changelog:
       - '^tweak'
       - '^test'
 brews:
-  - github:
+  - tap:
       owner: zcong1993
       name: homebrew-tap
     folder: Formula
