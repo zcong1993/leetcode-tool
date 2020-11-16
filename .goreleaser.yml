@@ -1,0 +1,18 @@
+builds:
+  - main: cmd/main.go
+    binary: download-release
+    ldflags: -s -w -X main.GitCommit={{.Commit}} -X main.Date={{.Date}}
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^refactor'
+      - '^tweak'
+      - '^test'
