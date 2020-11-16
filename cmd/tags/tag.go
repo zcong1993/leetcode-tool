@@ -26,6 +26,13 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	tags = append(tags, leetcode.Tag{
+		Name:           "all",
+		Slug:           "all",
+		TranslatedName: "汇总",
+	})
+
 	wg := sync.WaitGroup{}
 	sb := strings.Builder{}
 	for _, tag := range tags {
