@@ -67,6 +67,10 @@ $ leetcode-tool update
 1. GitHub 易于分享题解
 1. 根据自己需要, 组织题目做专题之类的总结
 
+## 使用此工具项目
+
+- [zcong1993/algo-go](https://github.com/zcong1993/algo-go)
+
 ## License
 
 MIT &copy; zcong1993
