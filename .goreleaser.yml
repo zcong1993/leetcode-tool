@@ -1,6 +1,6 @@
 builds:
   - main: cmd/main.go
-    binary: download-release
+    binary: leetcode-tool
     ldflags: -s -w -X main.GitCommit={{.Commit}} -X main.Date={{.Date}}
     goos:
       - windows
