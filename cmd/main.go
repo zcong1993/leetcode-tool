@@ -14,6 +14,13 @@ import (
 )
 
 var (
+	version = "master"
+	commit  = ""
+	date    = ""
+	builtBy = ""
+)
+
+var (
 	app = kingpin.New("algo", "A command-line tool for algo-go repo.")
 
 	updateCmd = app.Command("update", "Update readme.")
@@ -40,6 +47,10 @@ func showMeta(number string) {
 }
 
 func main() {
+	app.Version(buildVersion(version, commit, date, builtBy))
+	app.VersionFlag.Short('v')
+	app.HelpFlag.Short('h')
+
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case updateCmd.FullCommand():
 		update.Run()
@@ -50,4 +61,18 @@ func main() {
 	case tagsCmd.FullCommand():
 		tags.Run()
 	}
+}
+
+func buildVersion(version, commit, date, builtBy string) string {
+	var result = version
+	if commit != "" {
+		result = fmt.Sprintf("%s\ncommit: %s", result, commit)
+	}
+	if date != "" {
+		result = fmt.Sprintf("%s\nbuilt at: %s", result, date)
+	}
+	if builtBy != "" {
+		result = fmt.Sprintf("%s\nbuilt by: %s", result, builtBy)
+	}
+	return result
 }

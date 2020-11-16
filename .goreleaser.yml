@@ -1,7 +1,7 @@
 builds:
   - main: cmd/main.go
     binary: leetcode-tool
-    ldflags: -s -w -X main.GitCommit={{.Commit}} -X main.Date={{.Date}}
+    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=goreleaser
     goos:
       - windows
       - darwin
@@ -16,3 +16,12 @@ changelog:
       - '^refactor'
       - '^tweak'
       - '^test'
+brews:
+  - github:
+      owner: zcong1993
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/zcong1993/leetcode-tool
+    description: 一个让你更方便刷题的工具
+    test: |
+      system "#{bin}/leetcode-tool -v"
