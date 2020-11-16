@@ -72,11 +72,14 @@ func addMeta(tagMetas TagMetas, meta *Meta) {
 
 func findTag(content []byte, r *regexp.Regexp) string {
 	res := r.FindSubmatch(content)
+	if len(res) < 2 {
+		return ""
+	}
 	return string(res[1])
 }
 
 func findMeta(content []byte, fp string) *Meta {
-	draft := findTag(content, draftRegex) == "true"
+	draft := findTag(content, draftRegex) == "" || findTag(content, draftRegex) == "true"
 	if draft {
 		return nil
 	}
@@ -104,8 +107,16 @@ func fileExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+func isDirectory(path string) (bool, error) {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false, err
+	}
+	return fileInfo.IsDir(), err
+}
+
 func Run() {
-	files, err := doublestar.Glob("./solve/**/**.go")
+	files, err := doublestar.Glob("./solve/**/*")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,7 +125,11 @@ func Run() {
 	wg := sync.WaitGroup{}
 	var lock sync.Mutex
 	for _, fp := range files {
-		if strings.HasSuffix(fp, "test.go") || !strings.HasSuffix(fp, ".go") {
+		if isFolder, _ := isDirectory(fp); isFolder {
+			continue
+		}
+
+		if strings.HasSuffix(fp, ".md") {
 			continue
 		}
 		wg.Add(1)
@@ -125,9 +140,11 @@ func Run() {
 				log.Fatal(err)
 			}
 			meta := findMeta(content, fp)
-			lock.Lock()
-			addMeta(tagMetas, meta)
-			lock.Unlock()
+			if meta != nil {
+				lock.Lock()
+				addMeta(tagMetas, meta)
+				lock.Unlock()
+			}
 			wg.Done()
 		}()
 	}
