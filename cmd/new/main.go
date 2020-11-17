@@ -173,9 +173,11 @@ var (
  * @frontendId {{ .FrontendId }}
 */
 
-{{ .Code }}
+export {{ .Code }}
 `
-	testCodeStrTs = ""
+	testCodeStrTs = `
+it('solve_{{ .Index }} should pass', () => {})
+`
 )
 
 var (
@@ -191,5 +193,7 @@ var (
 
 {{ .Code }}
 `
-	testCodeStrJs = ""
+	testCodeStrJs = `
+it('solve_{{ .Index }} should pass', () => {})
+`
 )
