@@ -67,7 +67,11 @@ $ leetcode-tool update
 1. GitHub 易于分享题解
 1. 根据自己需要, 组织题目做专题之类的总结
 
-## 使用此工具项目
+## 模板项目
+
+- Typescript [zcong1993/leetcode-ts-template](https://github.com/zcong1993/leetcode-ts-template)
+
+## 使用此工具的项目
 
 - [zcong1993/algo-go](https://github.com/zcong1993/algo-go)
 
