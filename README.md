@@ -16,6 +16,17 @@ $ brew install zcong1993/homebrew-tap/leetcode-tool
 $ leetcode-tool help
 ```
 
+## 使用说明
+
+[https://blog.cong.moe/post/2020-11-30-leetcode_tool](https://blog.cong.moe/post/2020-11-30-leetcode_tool)
+
+## 支持语言
+
+- Golang go
+- Typescript ts
+- Javascript js
+- Python3 py3
+
 ## 主要功能
 
 ### 新建题目代码

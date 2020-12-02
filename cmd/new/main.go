@@ -17,12 +17,15 @@ import (
 	"github.com/zcong1993/leetcode-tool/pkg/leetcode"
 )
 
+type TplFile struct {
+	Name     string
+	FileName string
+	TplStr   string
+}
+
 type LanguageConfig struct {
-	LeetcodeLang   string
-	CodeTplStr     string
-	TestCodeTplStr string
-	CodeFileName   string
-	TestFileName   string
+	LeetcodeLang string
+	TplFiles     []TplFile
 }
 
 const (
@@ -33,25 +36,20 @@ const (
 var (
 	languageConfigs = map[string]LanguageConfig{
 		"go": {
-			CodeTplStr:     codeStrGo,
-			TestCodeTplStr: testCodeStrGo,
-			LeetcodeLang:   "Go",
-			CodeFileName:   "solve_%s.go",
-			TestFileName:   "solve_%s_test.go",
+			LeetcodeLang: "Go",
+			TplFiles:     []TplFile{{"code", "solve_%s.go", codeStrGo}, {"test", "solve_%s_test.go", testCodeStrGo}},
 		},
 		"ts": {
-			CodeTplStr:     codeStrTs,
-			TestCodeTplStr: testCodeStrTs,
-			LeetcodeLang:   "TypeScript",
-			CodeFileName:   "solve_%s.ts",
-			TestFileName:   "solve_%s.test.ts",
+			LeetcodeLang: "TypeScript",
+			TplFiles:     []TplFile{{"code", "solve_%s.ts", codeStrTs}, {"test", "solve_%s.test.ts", testCodeStrTs}},
 		},
 		"js": {
-			CodeTplStr:     codeStrJs,
-			TestCodeTplStr: testCodeStrJs,
-			LeetcodeLang:   "JavaScript",
-			CodeFileName:   "solve_%s.js",
-			TestFileName:   "solve_%s.test.js",
+			LeetcodeLang: "JavaScript",
+			TplFiles:     []TplFile{{"code", "solve_%s.js", codeStrJs}, {"test", "solve_%s.test.js", testCodeStrJs}},
+		},
+		"py3": {
+			LeetcodeLang: "Python3",
+			TplFiles:     []TplFile{{"code", "solve_%s.py", codeStrPy3}, {"test", "test_%s.py", testCodeStrPy3}, {"__init__", "__init__.py", ""}},
 		},
 	}
 )
@@ -107,9 +105,6 @@ func Run(n string, lang string) {
 	folderName := prefix + number
 	fp := filepath.Join(folder, folderName)
 	os.MkdirAll(fp, 0755)
-	codeFp := filepath.Join(fp, fmt.Sprintf(config.CodeFileName, number))
-	codeTestFp := filepath.Join(fp, fmt.Sprintf(config.TestFileName, number))
-	problemFp := filepath.Join(fp, "problem.md")
 	metaf := &MetaWithFolder{
 		*meta,
 		folderName,
@@ -119,19 +114,22 @@ func Run(n string, lang string) {
 	metaf.Meta.Content = strings.ReplaceAll(metaf.Meta.Content, "↵", "")
 	metaf.Meta.Code = gjson.Get(metaf.CodeSnippets, fmt.Sprintf("#(lang=%s).code", config.LeetcodeLang)).String()
 
-	if !fileExists(codeFp) {
-		bf := mustExecuteTemplate("code", config.CodeTplStr, metaf)
-		ioutil.WriteFile(codeFp, bf, 0644)
-	}
-
-	if !fileExists(codeTestFp) {
-		bf := mustExecuteTemplate("test", config.TestCodeTplStr, metaf)
-		ioutil.WriteFile(codeTestFp, bf, 0644)
-	}
-
+	problemFp := filepath.Join(fp, "problem.md")
 	if !fileExists(problemFp) {
 		bf := mustExecuteTemplate("problem", problemStr, metaf)
 		ioutil.WriteFile(problemFp, bf, 0644)
+	}
+
+	for _, tpl := range config.TplFiles {
+		fileName := tpl.FileName
+		if strings.Count(tpl.FileName, "%s") > 0 {
+			fileName = fmt.Sprintf(tpl.FileName, number)
+		}
+		fp := filepath.Join(fp, fileName)
+		if !fileExists(fp) {
+			bf := mustExecuteTemplate(tpl.Name, tpl.TplStr, metaf)
+			ioutil.WriteFile(fp, bf, 0644)
+		}
 	}
 	fmt.Printf("Done: %s\n", fp)
 }
@@ -195,5 +193,23 @@ var (
 `
 	testCodeStrJs = `
 it('solve_{{ .Index }} should pass', () => {})
+`
+)
+
+var (
+	codeStrPy3 = `'''
+@index {{ .Index }}
+@title {{ .Title }}
+@difficulty {{ .Difficulty }}
+@tags {{ .TagStr }}
+@draft false
+@link {{ .Link }}
+@frontendId {{ .FrontendId }}
+'''
+
+{{ .Code }}
+`
+	testCodeStrPy3 = `def test_solve():
+	pass
 `
 )
