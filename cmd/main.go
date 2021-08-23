@@ -40,6 +40,9 @@ func showMeta(number string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if meta == nil {
+		log.Fatal("mate not found")
+	}
 	meta.Content = ""
 	meta.Code = ""
 	meta.CodeSnippets = ""

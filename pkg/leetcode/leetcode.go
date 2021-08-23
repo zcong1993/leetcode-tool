@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
+
+	"github.com/zcong1993/leetcode-tool/internal/config"
 
 	"github.com/tidwall/gjson"
 )
@@ -37,7 +38,12 @@ var (
 )
 
 func getAllPloblem() ([]byte, error) {
-	resp, err := http.Get("https://leetcode-cn.com/api/problems/all/")
+	req, err := http.NewRequest(http.MethodGet, "https://leetcode-cn.com/api/problems/all/", nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Cookie", config.GetCookie())
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -96,9 +102,10 @@ func getDetail(slug string) (*Meta, error) {
 }
 
 func GetMetaByNumber(number string) (*Meta, error) {
+	//ploblems, err := ioutil.ReadFile("./solve/a.json")
 	ploblems, err := getAllPloblem()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	slug := findPloblemSlugByNumber(ploblems, number)
 	return getDetail(slug)

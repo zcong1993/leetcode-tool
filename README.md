@@ -86,6 +86,14 @@ $ leetcode-tool update
 
 - [zcong1993/algo-go](https://github.com/zcong1993/algo-go)
 
+## 常见问题
+
+### 1. 报错 panic: runtime error: invalid memory address or nil pointer dereference
+
+因为 LeetCode 网站现在某些请求会校验 cookie, 采取的修复方法是请求增加了 cookie, 但是内置 cookie 没法确保长期有效.
+
+所以 `.leetcode.json` 配置文件中支持 cookie 配置, 后续请访问此链接 https://leetcode-cn.com/api/problems/all 拿到 cookie 自行更新配置文件.
+
 ## License
 
 MIT &copy; zcong1993

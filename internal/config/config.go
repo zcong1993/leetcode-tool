@@ -5,8 +5,11 @@ import (
 	"io/ioutil"
 )
 
+const defaultCookie = "alicfw=1089899001%7C2081167297%7C1328233593%7C1328234352; alicfw_gfver=v1.200309.1"
+
 type Config struct {
-	Lang string `json:"lang"`
+	Lang   string `json:"lang"`
+	Cookie string `json:"cookie"`
 }
 
 const configPath = ".leetcode.json"
@@ -27,4 +30,13 @@ func LoadConfig() Config {
 func GetLang() string {
 	c := LoadConfig()
 	return c.Lang
+}
+
+func GetCookie() string {
+	c := LoadConfig()
+	ck := c.Cookie
+	if ck == "" {
+		return defaultCookie
+	}
+	return ck
 }
