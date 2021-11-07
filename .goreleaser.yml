@@ -7,6 +7,9 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
+  - main: cmd/main.go
+    binary: leetcode-tool
+    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=goreleaser
   - env:
       - CGO_ENABLED=0
     goos:
