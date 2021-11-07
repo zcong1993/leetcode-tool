@@ -10,7 +10,7 @@ builds:
   - main: cmd/main.go
     binary: leetcode-tool
     ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=goreleaser
-  - env:
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
