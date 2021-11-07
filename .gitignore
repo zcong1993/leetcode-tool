@@ -42,3 +42,5 @@ toc
 solve
 
 .leetcode.json
+
+dist/
