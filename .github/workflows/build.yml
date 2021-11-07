@@ -1,13 +1,14 @@
-name: goreleaser
+name: build
 
 on:
-  pull_request:
   push:
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
-  goreleaser:
+  build:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -30,6 +31,6 @@ jobs:
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: release --rm-dist
+          args: release --rm-dist --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
