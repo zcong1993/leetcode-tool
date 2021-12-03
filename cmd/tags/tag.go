@@ -21,17 +21,17 @@ func fileExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-func Run() {
+func Run(force bool) {
 	tags, err := leetcode.GetTags()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tags = append(tags, leetcode.Tag{
+	tags = append([]leetcode.Tag{{
 		Name:           "all",
 		Slug:           "all",
 		TranslatedName: "汇总",
-	})
+	}}, tags...)
 
 	wg := sync.WaitGroup{}
 	sb := strings.Builder{}
@@ -46,7 +46,7 @@ func Run() {
 		tag := tag
 		wg.Add(1)
 		go func() {
-			if fileExists(fp) {
+			if !force && fileExists(fp) {
 				wg.Done()
 				return
 			}
@@ -55,7 +55,10 @@ func Run() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			ioutil.WriteFile(fp, content.Bytes(), 0644)
+			err = ioutil.WriteFile(fp, content.Bytes(), 0644)
+			if err != nil {
+				log.Printf("write file %s error, %s\n", fp, err)
+			}
 			wg.Done()
 		}()
 	}

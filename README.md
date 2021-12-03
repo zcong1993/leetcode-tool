@@ -57,6 +57,19 @@ number 为网页上显示的题目序号, 例如: `leetcode-tool new 1` 创建�
 
 从 leetcode 网站拉取最新分类, 并创建 `toc` 对应文件, 一般不需要运行.
 
+### 重置项目
+
+假如想要重新从零开始, 或者你的项目是基于别人项目 fork 的, 可以使用如下方式清理已有题解:
+
+```shell
+# 1. 删除所有题解文件
+rm -rf solve/*
+# 2. 重新构建 toc 文件, -f 参数会强制覆盖
+leetcode-tool tags -f
+# 2.1 假如你还保留了部分题解, 还需要更新下题目状态
+leetcode-tool update
+```
+
 ## Workflow
 
 如何刷题?

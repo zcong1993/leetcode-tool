@@ -32,7 +32,8 @@ var (
 	metaCmd    = app.Command("meta", "Show problem meta by number.")
 	metaNumber = metaCmd.Arg("number", "problem number").Required().String()
 
-	tagsCmd = app.Command("tags", "Update tag toc files.")
+	tagsCmd   = app.Command("tags", "Update tag toc files.")
+	tagsForce = tagsCmd.Flag("force", "force update file").Short('f').Bool()
 )
 
 func showMeta(number string) {
@@ -62,7 +63,7 @@ func main() {
 	case metaCmd.FullCommand():
 		showMeta(*metaNumber)
 	case tagsCmd.FullCommand():
-		tags.Run()
+		tags.Run(*tagsForce)
 	}
 }
 
