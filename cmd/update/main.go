@@ -24,6 +24,7 @@ var (
 	tagsRegex       = regexp.MustCompile("@tags (.+)")
 	draftRegex      = regexp.MustCompile("@draft (.+)")
 	linkRegex       = regexp.MustCompile("@link (.+)")
+	frontendIdRegex = regexp.MustCompile("@frontendId (.+)")
 )
 
 var (
@@ -38,6 +39,7 @@ type Meta struct {
 	Draft      bool
 	Fp         string
 	Link       string
+	FrontendId string
 }
 
 type Metas []*Meta
@@ -92,6 +94,7 @@ func findMeta(content []byte, fp string) *Meta {
 		Draft:      draft,
 		Fp:         filepath.Dir(fp),
 		Link:       findTag(content, linkRegex),
+		FrontendId: findTag(content, frontendIdRegex),
 	}
 }
 
@@ -179,7 +182,7 @@ var tableStr = `
 
 总计: {{ .Total }}
 
-| 序号 | 难度 | 题目                    | 解答                      |
-| ---- | ---- | ------------------ | ---------------- |{{ range .Metas }}
-| {{ .Index }} | {{ .Difficulty }} | [{{ .Title }}]({{ .Link }}) | [{{ .Fp }}](../{{ .Fp }})|{{ end }}
+| 网页序号 | 序号 | 难度 | 题目                    | 解答                      |
+| ---- | ---- | ---- | ------------------ | ---------------- |{{ range .Metas }}
+| {{ .FrontendId }} | {{ .Index }} | {{ .Difficulty }} | [{{ .Title }}]({{ .Link }}) | [{{ .Fp }}](../{{ .Fp }})|{{ end }}
 `
