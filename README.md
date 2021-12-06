@@ -9,11 +9,26 @@
 ## Install
 
 ```bash
+# homebrew
 $ brew tap zcong1993/homebrew-tap
 $ brew install zcong1993/homebrew-tap/leetcode-tool
 
+# 直接安装
+curl -fsSL https://bina.egoist.sh/zcong1993/leetcode-tool | sh
+
 # show help
 $ leetcode-tool help
+```
+
+## 配置
+
+可以在项目根目录创建 `.leetcode.json` 配置文件.
+
+```js
+{
+  "lang": "go", // 项目全局语言, 配置后 new 命令 --lang 参数可省略, 目前支持 go ts js py3
+  "cookie": "xxx"
+}
 ```
 
 ## 使用说明
@@ -105,7 +120,7 @@ $ leetcode-tool update
 
 因为 LeetCode 网站现在某些请求会校验 cookie, 采取的修复方法是请求增加了 cookie, 但是内置 cookie 没法确保长期有效.
 
-所以 `.leetcode.json` 配置文件中支持 cookie 配置, 后续请访问此链接 https://leetcode-cn.com/api/problems/all 拿到 cookie 自行更新配置文件.
+所以 `.leetcode.json` 配置文件中支持 cookie 配置, 后续请访问此链接 [https://leetcode-cn.com/api/problems/all](https://leetcode-cn.com/api/problems/all) 拿到 cookie 自行更新配置文件.
 
 ## License
 
