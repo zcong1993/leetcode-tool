@@ -21,7 +21,7 @@ var (
 )
 
 var (
-	app = kingpin.New("algo", "A command-line tool for algo-go repo.")
+	app = kingpin.New("leetcode-tool", "一个让你更方便刷题的工具.")
 
 	updateCmd = app.Command("update", "Update readme.")
 
