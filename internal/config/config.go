@@ -14,7 +14,15 @@ type Config struct {
 
 const configPath = ".leetcode.json"
 
-func LoadConfig() Config {
+func NewConfig() *Config {
+	c := loadConfig()
+	if c.Cookie == "" {
+		c.Cookie = defaultCookie
+	}
+	return &c
+}
+
+func loadConfig() Config {
 	var c Config
 	content, err := ioutil.ReadFile(configPath)
 	if err != nil {
@@ -25,18 +33,4 @@ func LoadConfig() Config {
 		return c
 	}
 	return c
-}
-
-func GetLang() string {
-	c := LoadConfig()
-	return c.Lang
-}
-
-func GetCookie() string {
-	c := LoadConfig()
-	ck := c.Cookie
-	if ck == "" {
-		return defaultCookie
-	}
-	return ck
 }

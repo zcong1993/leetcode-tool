@@ -37,12 +37,20 @@ var (
 	}
 )
 
-func getAllPloblem() ([]byte, error) {
+type Leetcode struct {
+	Config *config.Config
+}
+
+func NewLeetcode(config *config.Config) *Leetcode {
+	return &Leetcode{Config: config}
+}
+
+func (l *Leetcode) getAllProblem() ([]byte, error) {
 	req, err := http.NewRequest(http.MethodGet, "https://leetcode-cn.com/api/problems/all/", nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Cookie", config.GetCookie())
+	req.Header.Set("Cookie", l.Config.Cookie)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -51,11 +59,11 @@ func getAllPloblem() ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func findPloblemSlugByNumber(ploblems []byte, number string) string {
-	return gjson.GetBytes(ploblems, fmt.Sprintf("stat_status_pairs.#(stat.frontend_question_id=\"%s\").stat.question__title_slug", number)).String()
+func (l *Leetcode) findProblemSlugByNumber(problems []byte, number string) string {
+	return gjson.GetBytes(problems, fmt.Sprintf("stat_status_pairs.#(stat.frontend_question_id=\"%s\").stat.question__title_slug", number)).String()
 }
 
-func getDetail(slug string) (*Meta, error) {
+func (l *Leetcode) getDetail(slug string) (*Meta, error) {
 	if slug == "" {
 		return nil, nil
 	}
@@ -76,7 +84,6 @@ func getDetail(slug string) (*Meta, error) {
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println(string(content))
 	tagsResult := gjson.GetBytes(content, "data.question.topicTags.#.slug").Array()
 	tags := make([]string, len(tagsResult))
 	for i, t := range tagsResult {
@@ -84,10 +91,6 @@ func getDetail(slug string) (*Meta, error) {
 	}
 
 	codeSnippets := gjson.GetBytes(content, "data.question.codeSnippets").String()
-
-	//for _, v := range gjson.GetBytes(content, "data.question.codeSnippets.#.lang").Array() {
-	//	println(v.String())
-	//}
 
 	return &Meta{
 		Index:        gjson.GetBytes(content, "data.question.questionId").String(),
@@ -101,17 +104,16 @@ func getDetail(slug string) (*Meta, error) {
 	}, nil
 }
 
-func GetMetaByNumber(number string) (*Meta, error) {
-	//ploblems, err := ioutil.ReadFile("./solve/a.json")
-	ploblems, err := getAllPloblem()
+func (l *Leetcode) GetMetaByNumber(number string) (*Meta, error) {
+	problems, err := l.getAllProblem()
 	if err != nil {
 		return nil, err
 	}
-	slug := findPloblemSlugByNumber(ploblems, number)
-	return getDetail(slug)
+	slug := l.findProblemSlugByNumber(problems, number)
+	return l.getDetail(slug)
 }
 
-func GetTags() ([]Tag, error) {
+func (l *Leetcode) GetTags() ([]Tag, error) {
 	resp, err := http.Get("https://leetcode-cn.com/problems/api/tags/")
 	if err != nil {
 		return nil, err

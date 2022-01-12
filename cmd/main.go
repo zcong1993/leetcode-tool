@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/zcong1993/leetcode-tool/internal/config"
+
 	"github.com/zcong1993/leetcode-tool/cmd/new"
 	"github.com/zcong1993/leetcode-tool/cmd/tags"
 	"github.com/zcong1993/leetcode-tool/cmd/update"
@@ -36,8 +38,8 @@ var (
 	tagsForce = tagsCmd.Flag("force", "force update file").Short('f').Bool()
 )
 
-func showMeta(number string) {
-	meta, err := leetcode.GetMetaByNumber(number)
+func showMeta(lc *leetcode.Leetcode, number string) {
+	meta, err := lc.GetMetaByNumber(number)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,15 +57,17 @@ func main() {
 	app.VersionFlag.Short('v')
 	app.HelpFlag.Short('h')
 
+	lc := leetcode.NewLeetcode(config.NewConfig())
+
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case updateCmd.FullCommand():
 		update.Run()
 	case newCmd.FullCommand():
-		new.Run(*number, *lang)
+		new.Run(lc, *number, *lang)
 	case metaCmd.FullCommand():
-		showMeta(*metaNumber)
+		showMeta(lc, *metaNumber)
 	case tagsCmd.FullCommand():
-		tags.Run(*tagsForce)
+		tags.Run(lc, *tagsForce)
 	}
 }
 

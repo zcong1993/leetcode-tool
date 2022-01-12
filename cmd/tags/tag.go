@@ -21,8 +21,8 @@ func fileExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-func Run(force bool) {
-	tags, err := leetcode.GetTags()
+func Run(lc *leetcode.Leetcode, force bool) {
+	tags, err := lc.GetTags()
 	if err != nil {
 		log.Fatal(err)
 	}

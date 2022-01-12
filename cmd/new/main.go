@@ -10,8 +10,6 @@ import (
 	"strings"
 	"text/template"
 
-	config2 "github.com/zcong1993/leetcode-tool/internal/config"
-
 	"github.com/tidwall/gjson"
 
 	"github.com/zcong1993/leetcode-tool/pkg/leetcode"
@@ -83,10 +81,11 @@ type MetaWithFolder struct {
 	FrontendId string
 }
 
-func Run(n string, lang string) {
+func Run(lc *leetcode.Leetcode, n string, lang string) {
 	if lang == "" {
-		lang = config2.GetLang()
+		lang = lc.Config.Lang
 	}
+
 	config, ok := languageConfigs[lang]
 	if !ok {
 		supportLangs := make([]string, len(languageConfigs))
@@ -97,7 +96,7 @@ func Run(n string, lang string) {
 		}
 		log.Fatalf("invalid lang, now support %s\n", strings.Join(supportLangs, ","))
 	}
-	meta, err := leetcode.GetMetaByNumber(n)
+	meta, err := lc.GetMetaByNumber(n)
 	if err != nil || meta == nil {
 		log.Fatal(err, meta)
 	}
