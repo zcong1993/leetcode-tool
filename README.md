@@ -26,7 +26,7 @@ $ leetcode-tool help
 
 ```js
 {
-  "lang": "go", // 项目全局语言, 配置后 new 命令 --lang 参数可省略, 目前支持 go ts js py3
+  "lang": "go", // 项目全局语言, 配置后 new 命令 --lang 参数可省略, 目前支持 go ts js py3 java
   "cookie": "xxx"
 }
 ```
@@ -41,6 +41,7 @@ $ leetcode-tool help
 - Typescript ts
 - Javascript js
 - Python3 py3
+- Java java
 
 ## 主要功能
 

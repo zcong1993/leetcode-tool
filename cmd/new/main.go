@@ -49,6 +49,10 @@ var (
 			LeetcodeLang: "Python3",
 			TplFiles:     []TplFile{{"code", "solve_%s.py", codeStrPy3}, {"test", "test_%s.py", testCodeStrPy3}, {"__init__", "__init__.py", ""}},
 		},
+		"java": {
+			LeetcodeLang: "Java",
+			TplFiles:     []TplFile{{"code", "solve_%s.java", codeStrJava}, {"test", "test_%s.java", testCodeStrJava}},
+		},
 	}
 )
 
@@ -210,5 +214,31 @@ var (
 `
 	testCodeStrPy3 = `def test_solve():
 	pass
+`
+)
+
+var (
+	codeStrJava = `package {{ .Folder }};
+
+/**
+ * @index {{ .Index }}
+ * @title {{ .Title }}
+ * @difficulty {{ .Difficulty }}
+ * @tags {{ .TagStr }}
+ * @draft false
+ * @link {{ .Link }}
+ * @frontendId {{ .FrontendId }}
+*/
+{{ .Code }}
+`
+
+	testCodeStrJava = `package {{ .Folder }};
+
+public class test_{{ printf "%04s" .Index }} {
+	public static void main(String[] args) {
+		Solution solution = new Solution();
+		// do some test
+	}
+}
 `
 )
